@@ -108,3 +108,40 @@ yarn build
    **Методы:**
 
    - ``emitChanges(event: string, payload?: object)`` - сообщает, что модель изменилась.
+
+## View типы, интерфейсы и классы
+
+**Типы**
+---
+- ```` - 
+- ```` - 
+- ```` - 
+- ```` - 
+- ```` - 
+
+**Интерфейсы**
+---
+- ``IPage`` - интерфейс главной страницы
+
+```
+interface IPage {
+    counterBasket: number;
+    cardList: HTMLElement[];
+    block: boolean;
+}
+```
+
+**Классы**
+---
+1. Класс **** - 
+
+   **Поля:**
+
+   - ``baseUrl:string (только для чтения)``
+   - ``options:RequestInit (зашищенный)``
+
+   **Методы:**
+
+   - ``handleResponse(response: Response): Promise<object>`` (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
+   - ``get(uri: string)`` - примает путь и возвращает ответ сервера.
+   - ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - примает путь и данные, возвращает ответ сервера.

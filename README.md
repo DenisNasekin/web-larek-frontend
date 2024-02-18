@@ -109,15 +109,10 @@ yarn build
 
    - ``emitChanges(event: string, payload?: object)`` - сообщает, что модель изменилась.
 
-## View типы, интерфейсы и классы
-
+## View компоненты и данные
 **Типы**
 ---
-- ```` - 
-- ```` - 
-- ```` - 
-- ```` - 
-- ```` - 
+- ``PaymentMethod`` - тип выбора способа оплаты
 
 **Интерфейсы**
 ---
@@ -130,18 +125,110 @@ interface IPage {
     block: boolean;
 }
 ```
+- ``ICard`` - интерфейс карточки товара. Данные получаем с сервера
+
+```
+interface ICard {
+	id: string;
+	description: string;
+	image: string;
+	title: string;
+	category: string;
+	price: number | null;
+}
+```
+- ``IBasket `` - интерфейс корзины
+
+```
+interface IBasket {
+	item: HTMLElement[];
+	total: number;
+}
+```
+- ``IBasketCardList `` - интерфейс корзины со списком покупок, расширяется  от IBasket
+
+```
+interface IBasketCardList extends ICard{
+	index: number;
+}
+```
+- ``IFormValid `` - интерфейс валидации формы
+
+```
+interface IFormValid {
+	valid: boolean;
+	errors: string[];
+}
+```
+- ``IOrderForm `` - интерфейс модального окна с вводом адреса расширяется от IFormValid
+
+```
+interface IOrderForm extends IFormValid {
+	paymentMethod: PaymentMethod;
+	address: string;
+	sending: (state: Partial<IOrderForm> & IFormValid) => HTMLElement;
+}
+```
+- ``IContactsForm `` - интерфейс модального окна с вводом почты и телефона расширяется от IFormValid
+
+```
+interface IContactsForm  extends IFormValid {
+	email: string;
+   phone: string;
+	sending: (state: Partial<IContactsForm > & IFormValid) => HTMLElement;
+}
+```
+- ``ISuccessfulForm `` - интерфейс модального окна с завершением заказа
+
+```
+interface ISuccessfulForm {
+	total: number;
+    id: string;
+}
+```
 
 **Классы**
 ---
-1. Класс **** - 
+1. Класс **Card** - описание карточки товара. Наследует класс Component
 
    **Поля:**
 
-   - ``baseUrl:string (только для чтения)``
-   - ``options:RequestInit (зашищенный)``
+   - ``_category (зашищенный)`` - HTMLElement;
+   - ``_title (зашищенный)``- HTMLElement;
+   - ``_image (зашищенный)``- HTMLImageElement;
+   - ``_description (зашищенный)``- HTMLElement;
+   - ``_price (зашищенный)``- HTMLElement;
+   - ``_button? (зашищенный)``- HTMLButtonElement;
 
    **Методы:**
 
-   - ``handleResponse(response: Response): Promise<object>`` (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
-   - ``get(uri: string)`` - примает путь и возвращает ответ сервера.
-   - ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - примает путь и данные, возвращает ответ сервера.
+   - ``set id(value: string)`` - принимает строку с сервера, устанавливает id.
+   - ``set title(value: string)`` - принимает строку с сервера, устанавливает заголовок.
+   - ``set category(value: string)`` - принимает строку с сервера, устанавливает категорию.
+   - ``set description(value: string)`` - принимает строку с сервера, устанавливает описание.
+   - ``set image(value: string)`` - принимает строку с сервера, устанавливает изображение.
+   - ``get id(): string `` - получить id.
+   - ``get title(): string`` - получить название.
+   - ``get price(): number`` - получить цену.
+   
+2. Класс **CardInBasket** - описание карточки товара в в корзине. Наследует класс Card
+
+   **Поля:**
+
+   - ``index`` - HTMLElement;
+   - ``title (зашищенный)``- HTMLElement;
+   - ``image (зашищенный)``- HTMLImageElement;
+   - ``description (зашищенный)``- HTMLElement;
+   - ``price (зашищенный)``- HTMLElement;
+   - ``button? (зашищенный)``- HTMLButtonElement;
+
+   **Методы:**
+
+   - ``set id(value: string)`` - принимает строку с сервера, устанавливает id.
+   - ``set title(value: string)`` - принимает строку с сервера, устанавливает заголовок.
+   - ``set category(value: string)`` - принимает строку с сервера, устанавливает категорию.
+   - ``set description(value: string)`` - принимает строку с сервера, устанавливает описание.
+   - ``set image(value: string)`` - принимает строку с сервера, устанавливает изображение.
+   - ``get id(): string `` - получить id.
+   - ``get title(): string`` - получить название.
+   - ``get price(): number`` - получить цену.   

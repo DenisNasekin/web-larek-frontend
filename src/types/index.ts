@@ -5,24 +5,25 @@ interface IPage {
     block: boolean;
 }
 
-
 /*Интерфейс карточки*/
 interface ICard {
-	id?: string;
-	description?: string;
+	id: string;
+	description: string;
 	image: string;
 	title: string;
 	category: string;
 	price: number | null;
-    button?: string;
 }
 
-/*Интерфейс корзины со списком покупок*/
-interface IBasketListItem {
+/*Интерфейс корзины*/
+interface IBasket {
+	item: HTMLElement[];
+	total: number;
+}
+
+/*Интерфейс корзины со списком товаров*/
+interface IBasketCardList extends ICard{
 	index: number;
-	title: string;
-	price: number;
-    delete: () => void; 
 }
 
 /*Интерфейс валидации формы*/

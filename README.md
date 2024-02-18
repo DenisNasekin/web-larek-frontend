@@ -58,10 +58,10 @@ yarn build
 ---
 1. Класс **Api** - класс по работе с Апи имеет следующие поля и методы
 
-**Поля:**
+   **Поля:**
 
-- ``baseUrl:string (только для чтения)``
-- ``options:RequestInit (зашищенный)``
+   - ``baseUrl:string (только для чтения)``
+   - ``options:RequestInit (зашищенный)``
 
 **Методы:**
 
@@ -71,17 +71,17 @@ yarn build
 
 2. Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы
 
-**Поля:**
+   **Поля:**
 
-- ``events: Map<EventName, Set<Subscriber>>`` (абстрактный)
+   - ``events: Map<EventName, Set<Subscriber>>`` (абстрактный)
 
-**Методы:**
+   **Методы:**
 
-- ``on<T extends object>(eventName: EventName, callback: (event: T) => void)`` - принимает событие и колбек функцию, если событие нет создает его.
-- ``off(eventName: EventName, callback: Subscriber)`` -  принимает событие и колбек функцию, удаляет подписку на событие. Если подписки нет, удаляет событие.
-- ``emit<T extends object>(eventName: string, data?: T)`` - принимает событие и данные, инициирует событие с данными.
-- ``onAll(callback: (event: EmitterEvent) => void)`` - принимает колбек, подписывает на все событие.
-- ``offAll()`` - сбрасывает все обработчики.
-- ``trigger<T extends object>(eventName: string, context?: Partial<T>)`` - принимает событие, возвращает функцию триггера генерирующий событие при вызове.
+   - ``on<T extends object>(eventName: EventName, callback: (event: T) => void)`` - принимает событие и колбек функцию, если событие нет создает его.
+   - ``off(eventName: EventName, callback: Subscriber)`` -  принимает событие и колбек функцию, удаляет подписку на событие. Если подписки нет, удаляет событие.
+   - ``emit<T extends object>(eventName: string, data?: T)`` - принимает событие и данные, инициирует событие с данными.
+   - ``onAll(callback: (event: EmitterEvent) => void)`` - принимает колбек, подписывает на все событие.
+   - ``offAll()`` - сбрасывает все обработчики.
+   - ``trigger<T extends object>(eventName: string, context?: Partial<T>)`` - принимает событие, возвращает функцию триггера генерирующий событие при вызове.
 
 

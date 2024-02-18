@@ -43,7 +43,12 @@ yarn build
 ## Базовые типы и классы
 
 - Тип ApiListResponse<Type> - ответ списка Апи
-- ApiPostMethods = 'POST' | 'PUT' | 'DELETE' - пост методы Апи
+- Тип ApiPostMethods - пост методы Апи
+- Тип EventName - имя события
+- Тип Subscriber - подписчик
+- Тип EmitterEvent - событие выбора. Принимает EventName и данные 
+
+- Интерфейс IEvents - содержит методы on, emit, trigger
 
 - Класс **Api** - класс по работе с Апи имеет следующие поля и методы:
   - поле baseUrl:string (только для чтения)
@@ -52,9 +57,12 @@ yarn build
   - метод get(uri: string) - примает путь и возвращает ответ сервера
   - метод post(uri: string, data: object, method: ApiPostMethods = 'POST') - примает путь и данные, возвращает ответ сервера
 
-
-```tsx
-
-
-
+- Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы:
+  - events: Map<EventName, Set<Subscriber>> (абстрактный)
+  - метод on<T extends object>(eventName: EventName, callback: (event: T) => void) - принимает событие и колбек функцию, если событие нет создает его
+  - off(eventName: EventName, callback: Subscriber) -  принимает событие и колбек функцию, удаляет подписку на событие. Если подписки нет, удаляет событие
+  - emit<T extends object>(eventName: string, data?: T) - принимает событие и данные, инициирует событие с данными
+  - onAll(callback: (event: EmitterEvent) => void) - принимает колбек, подписывает на все событие
+  - offAll() - сбрасывает все обработчики
+  - trigger<T extends object>(eventName: string, context?: Partial<T>) - принимает событие, возвращает функцию триггера генерирующий событие при вызове 
 

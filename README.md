@@ -72,3 +72,11 @@ yarn build
 - метод offAll() - сбрасывает все обработчики.
 - метод trigger<T extends object>(eventName: string, context?: Partial<T>) - принимает событие, возвращает функцию триггера генерирующий событие при вызове.
 
+3. Класс **Api** - класс по работе с Апи имеет следующие поля и методы:
+- поле baseUrl:string (только для чтения).
+- поле options:RequestInit (зашищенный).
+- метод handleResponse(response: Response): Promise<object> (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
+- метод get(uri: string) - примает путь и возвращает ответ сервера.
+- метод post(uri: string, data: object, method: ApiPostMethods = 'POST') - примает путь и данные, возвращает ответ сервера.
+
+

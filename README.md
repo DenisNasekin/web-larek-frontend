@@ -189,16 +189,42 @@ interface ISuccessfulForm {
 
 **Классы**
 ---
-1. Класс **Card** - описание карточки товара. Наследует класс Component
+1. Класс **Page** - формирование главной страницы. Наследуется от класса класс Component
 
    **Поля:**
 
+   - ``_counterBasket: (зашищенный)`` - HTMLElement;
+   - ``_cardList (зашищенный)``- HTMLElement;
+   - ``_wrapper (зашищенный)``- HTMLImageElement;
+   - ``_basket (зашищенный)``- HTMLElement;
+   
+   **Конструктор:**
+
+   constructor(container: HTMLElement, events: IEvents)
+
+
+   **Методы:**
+
+   - ``set counter(value: number | null)`` - изменить счетчик товара в корзине на главной странице.
+   - ``set cardList(items: HTMLElement[])`` - вывести список карточек.
+   - ``set locked(value: boolean)`` - установка или снятие блока прокрутки страницы.
+
+2. Класс **Card** - описание карточки товара. Наследуется от класса Component
+
+   **Поля:**
+
+   - ``_index (зашищенный)`` - HTMLElement;
    - ``_category (зашищенный)`` - HTMLElement;
    - ``_title (зашищенный)``- HTMLElement;
    - ``_image (зашищенный)``- HTMLImageElement;
    - ``_description (зашищенный)``- HTMLElement;
    - ``_price (зашищенный)``- HTMLElement;
-   - ``_button? (зашищенный)``- HTMLButtonElement;
+   - ``_button (зашищенный)``- HTMLButtonElement;
+   - ``_buttonTitle (зашищенный)``- HTMLButtonElement;
+
+    **Конструктор:**
+
+   constructor(container: HTMLElement, actions?: IActions)
 
    **Методы:**
 
@@ -210,25 +236,72 @@ interface ISuccessfulForm {
    - ``get id(): string `` - получить id.
    - ``get title(): string`` - получить название.
    - ``get price(): number`` - получить цену.
-   
-2. Класс **CardInBasket** - описание карточки товара в в корзине. Наследует класс Card
+   - ``disablePriceButton`` - делает кнопку не активной, если нет цены.
+   - ``set buttonTitle`` - устанавливает textContent кнопки.   
+
+3. Класс **Basket** - описание корзины. Наследует класс Component
 
    **Поля:**
 
-   - ``index`` - HTMLElement;
-   - ``title (зашищенный)``- HTMLElement;
-   - ``image (зашищенный)``- HTMLImageElement;
-   - ``description (зашищенный)``- HTMLElement;
-   - ``price (зашищенный)``- HTMLElement;
-   - ``button? (зашищенный)``- HTMLButtonElement;
+   - ``_list`` - HTMLElement;
+   - ``_button``- HTMLButtonElement;;
+   - ``_total``- HTMLElement;
+
+   **Конструктор:**
+
+   constructor(container: HTMLElement, events: EventEmitter)
 
    **Методы:**
 
-   - ``set id(value: string)`` - принимает строку с сервера, устанавливает id.
-   - ``set title(value: string)`` - принимает строку с сервера, устанавливает заголовок.
-   - ``set category(value: string)`` - принимает строку с сервера, устанавливает категорию.
-   - ``set description(value: string)`` - принимает строку с сервера, устанавливает описание.
-   - ``set image(value: string)`` - принимает строку с сервера, устанавливает изображение.
-   - ``get id(): string `` - получить id.
-   - ``get title(): string`` - получить название.
-   - ``get price(): number`` - получить цену.   
+   - ``set items(items: HTMLElement[])`` - вставить данные в корзину.
+   - ``set total(price: number)`` - посчитать общую стоимость товара.
+   - ``set selected(items: Card[])`` - проверить наличие карточки в корзине.
+
+4. Класс **OrderForm** - отображение модального окна заполнения адреса. Наследует класс Form
+
+   **Поля:**
+
+   - ``_onlineCard`` - HTMLButtonElement;
+   - ``_oflineCash``- HTMLButtonElement;;
+   - ``_total``- HTMLElement;
+
+   **Конструктор:**
+
+   constructor(container: HTMLFormElement, events: IEvents, actions?: IActions)
+
+   **Методы:**
+
+   - ``toggleButtons`` - переключение между кнопками.
+   - ``set address`` - ввод адреса доставки.
+     
+5. Класс **ContactsForm** - отображение модального окна заполнения почты и телефона. Наследует класс Form
+
+   **Поля:**
+
+   - ``_onlineCard`` - HTMLButtonElement;
+   - ``_oflineCash``- HTMLButtonElement;;
+   - ``_total``- HTMLElement;
+
+   **Конструктор:**
+
+   constructor(container: HTMLFormElement, events: IEvents)
+
+   **Методы:**
+
+   - ``set phone`` - ввод телефона.
+   - ``set email`` - ввод почты.
+
+6. Класс **SuccessfulForm** - отображение модального удачного заказа. Наследуется от  класс Component
+
+   **Поля:**
+
+   - ``close`` -  HTMLElement;
+   - ``_total``- HTMLElement;
+
+   **Конструктор:**
+
+   constructor(container: HTMLElement, actions: ISuccessActions)
+
+   **Методы:**
+
+   - ``set total`` - устанавливет текст в элемент. 

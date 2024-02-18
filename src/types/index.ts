@@ -1,18 +1,28 @@
-/*Интерфейс данных карточки выгружаемых с сервера*/
+/*Интерфейс главной страницы*/
+interface IPage {
+    counterBasket: number;
+    cardList: HTMLElement[];
+    block: boolean;
+}
+
+
+/*Интерфейс карточки*/
 interface ICard {
-	id: string;
-	description: string;
+	id?: string;
+	description?: string;
 	image: string;
 	title: string;
 	category: string;
 	price: number | null;
+    button?: string;
 }
 
 /*Интерфейс корзины со списком покупок*/
 interface IBasketListItem {
-	id: string;
+	index: number;
 	title: string;
 	price: number;
+    delete: () => void; 
 }
 
 /*Интерфейс валидации формы*/

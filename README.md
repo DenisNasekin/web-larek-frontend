@@ -40,7 +40,14 @@ npm run build
 ```
 yarn build
 ```
-## Базовые типы и классы
+
+Реализация данного приложение была разработана по архитектуре MVP, состоящей из компонентов:
+
+- **Model** - модель данных;
+- **View** - модель отображения интерфейса;
+- **Presenter** - связующая модель;
+
+## Базовые типы, интерфейсы и классы
 
 **Типы**
 ---
@@ -63,11 +70,11 @@ yarn build
    - ``baseUrl:string (только для чтения)``
    - ``options:RequestInit (зашищенный)``
 
-**Методы:**
+   **Методы:**
 
-- ``handleResponse(response: Response): Promise<object>`` (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
-- ``get(uri: string)`` - примает путь и возвращает ответ сервера.
-- ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - примает путь и данные, возвращает ответ сервера.
+   - ``handleResponse(response: Response): Promise<object>`` (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
+   - ``get(uri: string)`` - примает путь и возвращает ответ сервера.
+   - ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - примает путь и данные, возвращает ответ сервера.
 
 2. Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы
 
@@ -84,4 +91,20 @@ yarn build
    - ``offAll()`` - сбрасывает все обработчики.
    - ``trigger<T extends object>(eventName: string, context?: Partial<T>)`` - принимает событие, возвращает функцию триггера генерирующий событие при вызове.
 
+3. Класс **Component** - абстрактный класс, нужен для работы с DOM элементами и имеет следующие поля и методы
 
+   **Методы:**
+
+   - ``toggleClass(element: HTMLElement, className: string, force?: boolean)`` - переключает классы.
+   - ``setText(element: HTMLElement, value: unknown)`` -  устанавливает текстовое поле.
+   - ``setDisabled(element: HTMLElement, state: boolean)`` - меняет статус блокировки.
+   - ``setHidden(element: HTMLElement)`` - скрывает элемент.
+   - ``setVisible(element: HTMLElement)`` - показывает элемент.
+   - ``setImage(element: HTMLImageElement, src: string, alt?: string)`` - устанавливает изображение с альтернативным текстом.
+   - ``render(data?: Partial): HTMLElement`` - возвращает корневой DOM элемент.
+
+4. Класс **Model** - абстрактный класс, нужен для работы с DOM элементами и имеет следующие поля и методы
+
+   **Методы:**
+
+   - ``emitChanges(event: string, payload?: object)`` - сообщает, что модель изменилась.

@@ -40,55 +40,21 @@ npm run build
 ```
 yarn build
 ```
-## Ключевые типы данных
-```
-/*Интерфейс данных карточки выгружаемых с сервера*/
-interface ICard {
-	id: string;
-	description: string;
-	image: string;
-	title: string;
-	category: string;
-	price: number | null;
-}
+## Базовые типы и классы
 
-/*Интерфейс корзины со списком покупок*/
-interface IBasketListItem {
-	id: string;
-	title: string;
-	price: number;
-}
+- Тип ApiListResponse<Type> - ответ списка Апи
+- ApiPostMethods = 'POST' | 'PUT' | 'DELETE' - пост методы Апи
 
-/*Интерфейс валидации формы*/
-interface IFormValid {
-	valid: boolean;
-	errors: string[];
-}
-
-/*Тип способа оплаты*/
-type PaymentMethod = 'Онлайн' | 'При получение';
+- Класс **Api** - класс по работе с Апи имеет следующие поля и методы:
+  - поле baseUrl:string (только для чтения)
+  - поле options:RequestInit (зашищенный) 
+  - метод handleResponse(response: Response): Promise<object> (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку
+  - метод get(uri: string) - примает путь и возвращает ответ сервера
+  - метод post(uri: string, data: object, method: ApiPostMethods = 'POST') - примает путь и данные, возвращает ответ сервера
 
 
-/*Интерфейс модального окна с вводом адреса*/
-interface IOrderForm extends IFormValid {
-	paymentMethod: PaymentMethod;
-	address: string;
-	sending: (state: Partial<IOrderForm> & IFormValid) => HTMLElement;
-}
+```tsx
 
-/*Интерфейс модального окна с вводом почты и телефона*/
-interface IContactsForm  extends IFormValid {
-	email: string;
-    phone: string;
-	sending: (state: Partial<IContactsForm > & IFormValid) => HTMLElement;
-}
 
-/*Интерфейс модального окна с удвчным оформлением заказа*/
-interface ISuccessfulForm {
-	total: number;
-    id: string;
-}
-
-```
 
 

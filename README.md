@@ -41,7 +41,7 @@ npm run build
 yarn build
 ```
 ## Базовые типы и классы
-===
+
 **ТИПЫ**
 ---
 - ``ApiListResponse<Type>`` - ответ списка Апи
@@ -59,12 +59,12 @@ yarn build
 Класс **Api** - класс по работе с Апи имеет следующие поля и методы
 
 **Поля:**
----
+
 - ``baseUrl:string (только для чтения)``
 - ``options:RequestInit (зашищенный)``
 
 **Методы:**
----
+
 - ``handleResponse(response: Response): Promise<object>`` (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
 - ``get(uri: string)`` - примает путь и возвращает ответ сервера.
 - ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - примает путь и данные, возвращает ответ сервера.
@@ -72,11 +72,11 @@ yarn build
 Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы
 
 **Поля:**
----
+
 - ``events: Map<EventName, Set<Subscriber>>`` (абстрактный)
 
 **Методы:**
----
+
 - ``on<T extends object>(eventName: EventName, callback: (event: T) => void)`` - принимает событие и колбек функцию, если событие нет создает его.
 - ``off(eventName: EventName, callback: Subscriber)`` -  принимает событие и колбек функцию, удаляет подписку на событие. Если подписки нет, удаляет событие.
 - ``emit<T extends object>(eventName: string, data?: T)`` - принимает событие и данные, инициирует событие с данными.

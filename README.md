@@ -62,7 +62,6 @@ yarn build
   - метод handleResponse(response: Response): Promise<object> (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
   - метод get(uri: string) - примает путь и возвращает ответ сервера.
   - метод post(uri: string, data: object, method: ApiPostMethods = 'POST') - примает путь и данные, возвращает ответ сервера.
-##
 Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы:
   - поле events: Map<EventName, Set<Subscriber>> (абстрактный).
   - метод on<T extends object>(eventName: EventName, callback: (event: T) => void) - принимает событие и колбек функцию, если событие нет создает его.

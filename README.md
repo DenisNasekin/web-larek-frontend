@@ -56,19 +56,20 @@ yarn build
 
 **КЛАССЫ**
 
-Класс **Api** - класс по работе с Апи имеет следующие поля и методы:
-- поле baseUrl:string (только для чтения)
-- поле options:RequestInit (зашищенный) 
-- метод handleResponse(response: Response): Promise<object> (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку
-- метод get(uri: string) - примает путь и возвращает ответ сервера
-- метод post(uri: string, data: object, method: ApiPostMethods = 'POST') - примает путь и данные, возвращает ответ сервера
+- Класс **Api** - класс по работе с Апи имеет следующие поля и методы:
+ - поле baseUrl:string (только для чтения)
+ - поле options:RequestInit (зашищенный) 
+ - метод handleResponse(response: Response): Promise<object> (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку
+ - метод get(uri: string) - примает путь и возвращает ответ сервера
+ - метод post(uri: string, data: object, method: ApiPostMethods = 'POST') - примает путь и данные, возвращает ответ сервера
 
-Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы:
-- поле events: Map<EventName, Set<Subscriber>> (абстрактный)
-- метод on<T extends object>(eventName: EventName, callback: (event: T) => void) - принимает событие и колбек функцию, если событие нет создает его
-- метод off(eventName: EventName, callback: Subscriber) -  принимает событие и колбек функцию, удаляет подписку на событие. Если подписки нет, удаляет событие
-- метод emit<T extends object>(eventName: string, data?: T) - принимает событие и данные, инициирует событие с данными
-- метод onAll(callback: (event: EmitterEvent) => void) - принимает колбек, подписывает на все событие
-- метод offAll() - сбрасывает все обработчики
-- метод trigger<T extends object>(eventName: string, context?: Partial<T>) - принимает событие, возвращает функцию триггера генерирующий событие при вызове 
+
+- Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы:
+ - поле events: Map<EventName, Set<Subscriber>> (абстрактный)
+ - метод on<T extends object>(eventName: EventName, callback: (event: T) => void) - принимает событие и колбек функцию, если событие нет создает его
+ - метод off(eventName: EventName, callback: Subscriber) -  принимает событие и колбек функцию, удаляет подписку на событие. Если подписки нет, удаляет событие
+ - метод emit<T extends object>(eventName: string, data?: T) - принимает событие и данные, инициирует событие с данными
+ - метод onAll(callback: (event: EmitterEvent) => void) - принимает колбек, подписывает на все событие
+ - метод offAll() - сбрасывает все обработчики
+ - метод trigger<T extends object>(eventName: string, context?: Partial<T>) - принимает событие, возвращает функцию триггера генерирующий событие при вызове 
 

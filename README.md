@@ -103,13 +103,31 @@ yarn build
    - ``setImage(element: HTMLImageElement, src: string, alt?: string)`` - устанавливает изображение с альтернативным текстом.
    - ``render(data?: Partial): HTMLElement`` - возвращает корневой DOM элемент.
 
-4. Класс **Model** - абстрактный класс, нужен для работы с DOM элементами и имеет следующие поля и методы
+4. Класс **Model** - класс расширяет стандартное апи
 
    **Методы:**
 
    - ``emitChanges(event: string, payload?: object)`` - сообщает, что модель изменилась.
 
+5. Класс **WebLarekApi** - абстрактный класс, нужен для работы с DOM элементами и имеет следующие поля и методы
+
+   **Поля:**
+
+   - ``cdn(string)`` - Базовый URL
+   
+   **Конструктор:**
+
+   constructor(cdn: string, baseUrl: string, options?: RequestInit)
+
+   **Методы:**
+
+   - ``getCardList(): Promise<ICardModel[]>`` - получение списка всех карточек с сервера
+   - ``getCardItem(id: string): Promise<ICardModel>`` - получение данных карточки по id
+   - ``orderCard(order: IOrder): Promise<IOrderResult>`` - Получение списка всех карточек с сервера
+
+
 ## View компоненты и данные
+
 **Типы**
 ---
 - ``PaymentMethod`` - тип выбора способа оплаты
@@ -183,7 +201,7 @@ interface IContactsForm  extends IFormValid {
 ```
 interface ISuccessfulForm {
 	total: number;
-    id: string;
+   id: string;
 }
 ```
 
@@ -305,3 +323,116 @@ interface ISuccessfulForm {
    **Методы:**
 
    - ``set total`` - устанавливет текст в элемент. 
+
+## Model компоненты и данные
+
+**Типы**
+---
+- ``FormErrors = Partial<Record<keyof IOrder, string>>`` - тип ошибки формы
+
+**Интерфейсы**
+---
+- ``IOrder`` - интерфейс всех данных в заказе
+
+```
+interface IOrder extends IOrderForm, IContactsForm {
+    total: number;
+    items: string[];
+}
+```
+- ``IOrderResult`` - интерфейс ответа сервена на заказ
+
+```
+interface IOrderResult {
+    id: string;
+    total: number;
+}
+```
+- ``IModalData`` - интерфейс данных в модальном окне
+
+```
+interface IModalData {
+    content: HTMLElement;
+}    
+```
+- ``IAppState `` - интерфейс данных приложения
+
+```
+interface IAppState {
+    cardList: IProduct[];
+    basket: IProduct[];
+    preview: string | null;
+    order: IOrder | null;
+}   
+```
+
+- ``IActions  `` - передоваемые действия
+
+```
+interface IActions {
+    onClick: (event: MouseEvent) => void;
+} 
+```
+
+- ``ISuccessActions  `` - передоваемые действия успешного заказа
+
+```
+interface ISuccessActions {
+    onClick: () => void;
+}
+``` 
+
+**Классы**
+---
+1. Класс **CardModel** - формирования и управления данными, применяется для отображения и обработки в бизнес-логике. Наследуется от класса Model
+
+   **Поля:**
+
+   - ``_id (зашищенный)`` - string;
+   - ``_category (зашищенный)`` - string;
+   - ``_title (зашищенный)``- string;
+   - ``_image (зашищенный)``- string;
+   - ``_description (зашищенный)``- string;
+   - ``_price (зашищенный)``- number | null;
+
+2. Класс **AppState** - класс управления состоянием проекта (списка карточек, корзины, заказов и форм). Наследуется от класса Model
+
+   **Поля:**
+
+   - ``_cardList(зашищенный)`` - CardModel[];
+   - ``_basket(зашищенный)``- CardModel[];
+   - ``_order(зашищенный)``- IOrder;
+   - ``_preview(зашищенный)``- string | null;
+   - ``_formErrors(зашищенный)``- FormErrors;
+
+   **Методы:**
+
+   - ``setCatalog`` - устанавливает список карточек.
+   - ``setPreview`` - устанавливает предпросомотр карточек.
+   - ``addToBasket`` - добавляет товар в корзину.
+   - ``removeFromBasket`` - удаляет товар из корзины.
+   - ``updateBasket`` - обновляет состояние корзины.
+   - ``clearBasket`` - очищает корзину.
+   - ``setDeliveryField`` - устанавливает значения данные доставки.
+   - ``setContactField`` - устанавливает значения данные контактов.
+   - ``validateDelivery `` - валидация формы доставки.
+   - ``validateContact`` - валидация формы контактов.
+
+3. Класс **Modal** - класс для работы с модальным окном. Наследуется от класса Component
+
+   **Конструктор:**
+
+   constructor(container: HTMLElement, events: IEvents)
+
+   **Методы:**
+
+   - ``content`` - определяет контент показа в модальном окне.
+   - ``open`` - открывает модальное окно.
+   - ``close`` - закрывает модальное окно.
+   - ``render`` - рендерит модальное окно.
+     
+4. Класс **Form** - класс для работы с формами. Наследуется от класса Component
+
+## Presenter компоненты и данные
+
+Реализация данного звена происходит в коде в файле index.ts

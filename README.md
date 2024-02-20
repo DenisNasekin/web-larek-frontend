@@ -61,9 +61,20 @@ yarn build
 ---
 - ``IEvents`` - содержит методы on, emit, trigger
 
+- ``IAppState `` - интерфейс данных приложения
+
+```
+interface IAppState {
+    cardList: IProduct[];
+    basket: IProduct[];
+    preview: string | null;
+    order: IOrder | null;
+}   
+```
+
 **Классы**
 ---
-1. Класс **Api** - класс по работе с Апи имеет следующие поля и методы
+1. Класс **Api** - класс по работе с Апи. Это абстрактный класс (не имеющий экземпляров), его наследником является класс **WebLarekApi**.
 
    **Поля:**
 
@@ -76,11 +87,11 @@ yarn build
    - ``get(uri: string)`` - примает путь и возвращает ответ сервера.
    - ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - примает путь и данные, возвращает ответ сервера.
 
-2. Класс **EventEmitter** - брокер событий, имплементируется от IEvents и имеет следующие поля и методы
+2. Класс **EventEmitter** - брокер событий, имплементируется от IEvents. Данный класс выполняет роль Presenterа в системе MVP. Имеет следующие поля и методы
 
    **Поля:**
 
-   - ``events: Map<EventName, Set<Subscriber>>`` (абстрактный)
+   - ``events: Map<EventName, Set<Subscriber>>``
 
    **Методы:**
 
@@ -91,7 +102,7 @@ yarn build
    - ``offAll()`` - сбрасывает все обработчики.
    - ``trigger<T extends object>(eventName: string, context?: Partial<T>)`` - принимает событие, возвращает функцию триггера генерирующий событие при вызове.
 
-3. Класс **Component** - абстрактный класс, нужен для работы с DOM элементами и имеет следующие поля и методы
+3. Класс **Component** - абстрактный класс, нужен для работы с DOM элементами. От этого класса наследуют все классы отображения(View): **Page**, **Card**, **Form**, **Basket**,  **SuccessfulForm**, **Modal**. Имеет следующие поля и методы
 
    **Методы:**
 
@@ -103,13 +114,36 @@ yarn build
    - ``setImage(element: HTMLImageElement, src: string, alt?: string)`` - устанавливает изображение с альтернативным текстом.
    - ``render(data?: Partial): HTMLElement`` - возвращает корневой DOM элемент.
 
-4. Класс **Model** - класс расширяет стандартное апи
+4. Класс **Model** - абстрактный класс модели данных, его наследником является класс **AppState**.
 
    **Методы:**
 
    - ``emitChanges(event: string, payload?: object)`` - сообщает, что модель изменилась.
 
-5. Класс **WebLarekApi** - абстрактный класс, нужен для работы с DOM элементами и имеет следующие поля и методы
+5. Класс **AppState** - класс управления состоянием проекта (списка карточек, корзины, заказов и форм). Наследуется от класса Model
+
+   **Поля:**
+
+   - ``_cardList(зашищенный)`` - Card[];
+   - ``_basket(зашищенный)``- Card[];
+   - ``_order(зашищенный)``- IOrder;
+   - ``_preview(зашищенный)``- string | null;
+   - ``_formErrors(зашищенный)``- FormErrors;
+
+   **Методы:**
+
+   - ``setCatalog`` - устанавливает список карточек.
+   - ``setPreview`` - устанавливает предпросомотр карточек.
+   - ``addToBasket`` - добавляет товар в корзину.
+   - ``removeFromBasket`` - удаляет товар из корзины.
+   - ``updateBasket`` - обновляет состояние корзины.
+   - ``clearBasket`` - очищает корзину.
+   - ``setDeliveryField`` - устанавливает значения данные доставки.
+   - ``setContactField`` - устанавливает значения данные контактов.
+   - ``validateDelivery `` - валидация формы доставки.
+   - ``validateContact`` - валидация формы контактов.
+
+6. Класс **WebLarekApi** - класс, нужен для работы с DOM элементами. Наследуется от класса Api и имеет следующие поля и методы. 
 
    **Поля:**
 
@@ -121,16 +155,16 @@ yarn build
 
    **Методы:**
 
-   - ``getCardList(): Promise<ICardModel[]>`` - получение списка всех карточек с сервера
-   - ``getCardItem(id: string): Promise<ICardModel>`` - получение данных карточки по id
+   - ``getCardList(): Promise<ICard[]>`` - получение списка всех карточек с сервера
+   - ``getCardItem(id: string): Promise<ICard>`` - получение данных карточки по id
    - ``orderCard(order: IOrder): Promise<IOrderResult>`` - Получение списка всех карточек с сервера
-
 
 ## View компоненты и данные
 
 **Типы**
 ---
 - ``PaymentMethod`` - тип выбора способа оплаты
+- ``FormErrors = Partial<Record<keyof IOrder, string>>`` - тип ошибки формы
 
 **Интерфейсы**
 ---
@@ -205,9 +239,49 @@ interface ISuccessfulForm {
 }
 ```
 
-**Классы**
+- ``IOrder`` - интерфейс всех данных в заказе
+
+```
+interface IOrder extends IOrderForm, IContactsForm {
+    total: number;
+    items: string[];
+}
+```
+- ``IOrderResult`` - интерфейс ответа сервена на заказ
+
+```
+interface IOrderResult {
+    id: string;
+    total: number;
+}
+```
+- ``IModalData`` - интерфейс данных в модальном окне
+
+```
+interface IModalData {
+    content: HTMLElement;
+}    
+```
+
+- ``IActions  `` - передоваемые действия
+
+```
+interface IActions {
+    onClick: (event: MouseEvent) => void;
+} 
+```
+
+- ``ISuccessActions  `` - передоваемые действия успешного заказа
+
+```
+interface ISuccessActions {
+    onClick: () => void;
+}
+``` 
+
+**Классы** описание классов View, наследующих от класса **Component**
 ---
-1. Класс **Page** - формирование главной страницы. Наследуется от класса класс Component
+1. Класс **Page** - формирование главной страницы. Наследуется от класса  Component
 
    **Поля:**
 
@@ -275,7 +349,26 @@ interface ISuccessfulForm {
    - ``set total(price: number)`` - посчитать общую стоимость товара.
    - ``set selected(items: Card[])`` - проверить наличие карточки в корзине.
 
-4. Класс **OrderForm** - отображение модального окна заполнения адреса. Наследует класс Form
+4. Класс **Form** - класс для работы с формами. Наследуется от класса Component
+
+   **Поля:**
+
+   - ``_onlineCard`` - HTMLButtonElement;
+   - ``_oflineCash``- HTMLButtonElement;;
+   - ``_total``- HTMLElement;
+
+   **Конструктор:**
+
+   constructor(container: HTMLFormElement, events: IEvents)
+
+   **Методы:**
+
+   - ``InInputChange`` -обработчик событий ввода.
+   - ``set valid`` - контролирует активность кнопки отправки в зависимости от валидности формы.
+   - ``set errors`` - устанавливает и отображает ошибки валидации формы.
+   - ``render`` - показывает состояние формы.
+
+5. Класс **OrderForm** - отображение модального окна заполнения адреса. Наследует класс Form
 
    **Поля:**
 
@@ -292,7 +385,7 @@ interface ISuccessfulForm {
    - ``toggleButtons`` - переключение между кнопками.
    - ``set address`` - ввод адреса доставки.
      
-5. Класс **ContactsForm** - отображение модального окна заполнения почты и телефона. Наследует класс Form
+6. Класс **ContactsForm** - отображение модального окна заполнения почты и телефона. Наследует класс Form
 
    **Поля:**
 
@@ -309,7 +402,7 @@ interface ISuccessfulForm {
    - ``set phone`` - ввод телефона.
    - ``set email`` - ввод почты.
 
-6. Класс **SuccessfulForm** - отображение модального удачного заказа. Наследуется от  класс Component
+7. Класс **SuccessfulForm** - отображение модального удачного заказа. Наследуется от  класс Component
 
    **Поля:**
 
@@ -324,101 +417,7 @@ interface ISuccessfulForm {
 
    - ``set total`` - устанавливет текст в элемент. 
 
-## Model компоненты и данные
-
-**Типы**
----
-- ``FormErrors = Partial<Record<keyof IOrder, string>>`` - тип ошибки формы
-
-**Интерфейсы**
----
-- ``IOrder`` - интерфейс всех данных в заказе
-
-```
-interface IOrder extends IOrderForm, IContactsForm {
-    total: number;
-    items: string[];
-}
-```
-- ``IOrderResult`` - интерфейс ответа сервена на заказ
-
-```
-interface IOrderResult {
-    id: string;
-    total: number;
-}
-```
-- ``IModalData`` - интерфейс данных в модальном окне
-
-```
-interface IModalData {
-    content: HTMLElement;
-}    
-```
-- ``IAppState `` - интерфейс данных приложения
-
-```
-interface IAppState {
-    cardList: IProduct[];
-    basket: IProduct[];
-    preview: string | null;
-    order: IOrder | null;
-}   
-```
-
-- ``IActions  `` - передоваемые действия
-
-```
-interface IActions {
-    onClick: (event: MouseEvent) => void;
-} 
-```
-
-- ``ISuccessActions  `` - передоваемые действия успешного заказа
-
-```
-interface ISuccessActions {
-    onClick: () => void;
-}
-``` 
-
-**Классы**
----
-1. Класс **CardModel** - формирования и управления данными, применяется для отображения и обработки в бизнес-логике. Наследуется от класса Model
-
-   **Поля:**
-
-   - ``_id (зашищенный)`` - string;
-   - ``_category (зашищенный)`` - string;
-   - ``_title (зашищенный)``- string;
-   - ``_image (зашищенный)``- string;
-   - ``_description (зашищенный)``- string;
-   - ``_price (зашищенный)``- number | null;
-
-2. Класс **AppState** - класс управления состоянием проекта (списка карточек, корзины, заказов и форм). Наследуется от класса Model
-
-   **Поля:**
-
-   - ``_cardList(зашищенный)`` - CardModel[];
-   - ``_basket(зашищенный)``- CardModel[];
-   - ``_order(зашищенный)``- IOrder;
-   - ``_preview(зашищенный)``- string | null;
-   - ``_formErrors(зашищенный)``- FormErrors;
-
-   **Методы:**
-
-   - ``setCatalog`` - устанавливает список карточек.
-   - ``setPreview`` - устанавливает предпросомотр карточек.
-   - ``addToBasket`` - добавляет товар в корзину.
-   - ``removeFromBasket`` - удаляет товар из корзины.
-   - ``updateBasket`` - обновляет состояние корзины.
-   - ``clearBasket`` - очищает корзину.
-   - ``setDeliveryField`` - устанавливает значения данные доставки.
-   - ``setContactField`` - устанавливает значения данные контактов.
-   - ``validateDelivery `` - валидация формы доставки.
-   - ``validateContact`` - валидация формы контактов.
-
-3. Класс **Modal** - класс для работы с модальным окном. Наследуется от класса Component
+8. Класс **Modal** - класс для работы с модальным окном. Наследуется от класса Component
 
    **Конструктор:**
 
@@ -430,12 +429,6 @@ interface ISuccessActions {
    - ``open`` - открывает модальное окно.
    - ``close`` - закрывает модальное окно.
    - ``render`` - рендерит модальное окно.
-     
-4. Класс **Form** - класс для работы с формами. Наследуется от класса Component
-
-## Presenter компоненты и данные
-
-Реализация данного звена происходит в коде в файле index.ts
 
 ## События:
 

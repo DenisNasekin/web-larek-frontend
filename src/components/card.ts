@@ -14,9 +14,9 @@ export class Card extends Component<ICard> {
         super(container);
     
     this._description = container.querySelector('.card__text');
-    this._image = container.<HTMLImageElement>('.card__image');
+    this._image = container.querySelector('.card__image');
     this._title = ensureElement<HTMLElement>('.card__title', container);
-    this._category = container.<HTMLElement>('.card__category');
+    this._category = container.querySelector('.card__category');
     this._price = ensureElement<HTMLElement>('.card__price', container);
     this._button = container.querySelector('.card__button');
 
@@ -58,8 +58,12 @@ export class Card extends Component<ICard> {
     }
 
     set price(value: number | null) {
-        this.setText(this._price, value);
-    }
+		this.setText(
+			this._price,
+			value ? `${value.toString()} синапсов` : 'Бесценно'
+		);
+		this.disablePriceButton(value);
+    }    
 
     get price(): number {
         return Number(this._price.textContent || '');

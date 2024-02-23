@@ -12,6 +12,7 @@ interface ICard {
 	category: string;
 	price: number | null;
 	button?: HTMLButtonElement;
+	buttonTitle: string;
 }
 
 interface IActions {

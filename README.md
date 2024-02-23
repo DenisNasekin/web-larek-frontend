@@ -246,14 +246,7 @@ interface IOrder extends IOrderForm, IContactsForm {
     items: string[];
 }
 ```
-- ``IOrderResult`` - интерфейс ответа сервена на заказ
 
-```
-interface IOrderResult {
-    id: string;
-    total: number;
-}
-```
 - ``IModalData`` - интерфейс данных в модальном окне
 
 ```

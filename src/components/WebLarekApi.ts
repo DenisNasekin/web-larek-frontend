@@ -1,5 +1,5 @@
 import {Api} from './base/api';
-import {ICard, ApiListResponse, IOrder, IOrderResult} from '../types';
+import {ICard, ApiListResponse, IOrder, ISuccessfulForm} from '../types';
 
 export class WebLarekApi extends Api {
     readonly cdn: string
@@ -25,7 +25,7 @@ export class WebLarekApi extends Api {
 		}));
     }
     //возврат данных по заказу
-    orderCard(order: IOrder): Promise<IOrderResult> {
-        return this.post(`/order`, order).then((data: IOrderResult) => data);
+    orderCard(order: IOrder): Promise<ISuccessfulForm> {
+        return this.post(`/order`, order).then((data: ISuccessfulForm) => data);
     }
 }

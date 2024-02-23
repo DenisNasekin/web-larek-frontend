@@ -6,7 +6,7 @@ import {AppState} from './components/AppState';//Импорт бизнес ло�
 import {Card} from './components/card';//Импорт карточки
 import {WebLarekApi} from './components/WebLarekApi';//Импорт апи
 import {API_URL, CDN_URL} from './utils/constants';//Импорт данных сервера
-import {IContactsForm, IOrder, IOrderForm} from './types';//Импорт интерфейсов форм
+import {IContactsForm, IOrder, IOrderForm, ICard} from './types';//Импорт интерфейсов форм
 import {Modal} from './components/modal';//Импорт модального окна
 import {Basket} from './components/basket';//Импорт корзины
 import {Order} from './components/orderForm';//Импорт формы адреса
@@ -32,8 +32,8 @@ const basket = new Basket(cloneTemplate(basketTemplate), events);//Создае�
 const delivery = new Order(cloneTemplate(orderTemplate), events, {onClick: (ev: Event) => events.emit('payment:toggle', ev.target),});//Создаем переменную формы доставки
 const contact = new Contacts(cloneTemplate(contactsTemplate), events);//Создаем переменную формы контактов
 
-// Выводим карточки на главную страницу
-events.on('catalog:install', () => {
+//Обновление списка карточек
+events.on('items:changed', () => {
 	page.catalog = appState.cardList.map((item) => {
 		const card = new Card(cloneTemplate(cardCatalogTemplate), {
 			onClick: () => events.emit('card:select', item),
@@ -41,8 +41,36 @@ events.on('catalog:install', () => {
 		return card.render({
 			title: item.title,
 			image: item.image,
-			category: item.category,
 			price: item.price,
+			category: item.category,
 		});
 	});
 });
+
+//Открываем карточку товара
+events.on('preview:changed', (item: ICard) => {
+	const card = new Card(cloneTemplate(cardPreviewTemplate), {
+		onClick: () => {
+			events.emit('product:toggle', item);
+			card.buttonTitle = appState.basket.indexOf(item) < 0 ? 'Купить' : 'Удалить из корзины';
+		},
+	});
+	modal.render({content: card.render({
+			title: item.title,
+			description: item.description,
+			image: item.image,
+			price: item.price,
+			category: item.category,
+			buttonTitle:
+				appState.basket.indexOf(item) < 0 ? 'Купить' : 'Удалить из корзины',
+		}),
+	});
+});
+
+
+// Получение и отображение списка продуктов при загрузке страницы
+api.getCardList()
+	.then(appState.setCatalog.bind(appState))
+	.catch((err) => {
+		console.log(err);
+	});

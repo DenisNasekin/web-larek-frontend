@@ -143,7 +143,7 @@ interface IAppState {
    - ``validateDelivery `` - валидация формы доставки.
    - ``validateContact`` - валидация формы контактов.
 
-6. Класс **WebLarekApi** - класс, нужен для работы с DOM элементами. Наследуется от класса Api и имеет следующие поля и методы. 
+6. Класс **WebLarekApi** - класс отправляет информацию на сервер и возвращает ответ сервера. Наследуется от класса Api и имеет следующие поля и методы. 
 
    **Поля:**
 
@@ -181,12 +181,13 @@ interface IPage {
 
 ```
 interface ICard {
-	id: string;
+	id?: string;
 	description: string;
 	image: string;
 	title: string;
 	category: string;
 	price: number | null;
+	button?: HTMLButtonElement;
 }
 ```
 - ``IBasket `` - интерфейс корзины
@@ -212,22 +213,20 @@ interface IFormValid {
 	errors: string[];
 }
 ```
-- ``IOrderForm `` - интерфейс модального окна с вводом адреса расширяется от IFormValid
+- ``IOrderForm `` - интерфейс модального окна с вводом адреса
 
 ```
-interface IOrderForm extends IFormValid {
-	paymentMethod: PaymentMethod;
+interface IOrderForm  {
+	payment: string;
 	address: string;
-	sending: (state: Partial<IOrderForm> & IFormValid) => HTMLElement;
 }
 ```
-- ``IContactsForm `` - интерфейс модального окна с вводом почты и телефона расширяется от IFormValid
+- ``IContactsForm `` - интерфейс модального окна с вводом почты и телефона
 
 ```
-interface IContactsForm  extends IFormValid {
+interface IContactsForm {
 	email: string;
    phone: string;
-	sending: (state: Partial<IContactsForm > & IFormValid) => HTMLElement;
 }
 ```
 - ``ISuccessfulForm `` - интерфейс модального окна с завершением заказа
@@ -349,13 +348,12 @@ interface ISuccessActions {
    - ``set total(price: number)`` - посчитать общую стоимость товара.
    - ``set selected(items: Card[])`` - проверить наличие карточки в корзине.
 
-4. Класс **Form** - класс для работы с формами. Наследуется от класса Component
+4. Класс **Form<T>** - класс для работы с формами. Наследуется от класса Component
 
    **Поля:**
 
-   - ``_onlineCard`` - HTMLButtonElement;
-   - ``_oflineCash``- HTMLButtonElement;;
-   - ``_total``- HTMLElement;
+   - ``_submit`` - HTMLButtonElement;
+   - ``_errors``- HTMLElement;
 
    **Конструктор:**
 
@@ -386,12 +384,6 @@ interface ISuccessActions {
    - ``set address`` - ввод адреса доставки.
      
 6. Класс **ContactsForm** - отображение модального окна заполнения почты и телефона. Наследует класс Form
-
-   **Поля:**
-
-   - ``_onlineCard`` - HTMLButtonElement;
-   - ``_oflineCash``- HTMLButtonElement;;
-   - ``_total``- HTMLElement;
 
    **Конструктор:**
 
@@ -434,6 +426,7 @@ interface ISuccessActions {
 
 **Карточка**
 ---
+- ``items:changed`` - изменение продуктов в каталоге
 - ``card:select`` - выбор карточки;
 - ``card:add`` - добавление карточки в корзину;
 - ``card:delete`` - удаление карточки из корзины;

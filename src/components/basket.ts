@@ -2,7 +2,7 @@ import {Component} from './base/component';
 import {createElement, ensureElement} from './../utils/utils';
 import {IBasket} from '../types';
 import {EventEmitter} from './base/events';
-import{Card} from './card'
+import{Card, CardBasket} from './card'
 
 export class Basket extends Component<IBasket> {
   protected _list: HTMLElement;
@@ -11,8 +11,8 @@ export class Basket extends Component<IBasket> {
 
   constructor(container: HTMLElement, events: EventEmitter) {
     super(container);
-	this._list = ensureElement<HTMLElement>('.basket__list', this.container);
-	this._button = this.container.querySelector('.basket__button');
+	  this._list = ensureElement<HTMLElement>('.basket__list', this.container);
+	  this._button = this.container.querySelector('.basket__button');
     this._total = this.container.querySelector('.basket__price');
 
     if(this._button) {
@@ -38,12 +38,16 @@ export class Basket extends Component<IBasket> {
   }
 
   //Устанавливаем наличие товаров в корзине
-  set selected(items: Card[]) {
+  set selected(items: Card<CardBasket>[]) {
     if (items.length) {
         this.setDisabled(this._button, false);
     } else {
         this.setDisabled(this._button, true);
     }
   }
+
+  toggleButton(isDisabled: boolean) {
+		this._button.disabled = isDisabled;
 }
 
+}

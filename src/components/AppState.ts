@@ -1,95 +1,32 @@
 import {Model} from './base/Model';
-import {IAppState, IOrder, ICard, FormErrors, IOrderForm, IContactsForm} from '../types'
+import {IAppState, IOrder, ICard, ICardItem, FormErrors, IOrderForm, IContactsForm} from '../types'
 
-export class AppState extends Model<IAppState> {
-    cardList: ICard[];
-    basket: ICard[];
+ class AppState extends Model<IAppState> {
+    cardList: CardItem[];
+    basket: CardItem[] = [];
     order: IOrder = {payment: 'online', address: '', email: '', phone: '', total: 0, items: []};
     preview: string | null;
-    formErrors: FormErrors;
-
-    setCatalog(items: ICard[]) {
-		this.cardList = items;
+    formErrors: FormErrors = {};
+ 
+    setCatalog(items: ICardItem[]) {
+		this.cardList = items.map(item => new CardItem(item, this.events));
 		this.emitChanges('items:changed', { catalog: this.cardList });
     }
     
-    setPreview(item: ICard) {
+    setPreview(item: CardItem) {
         this.preview = item.id;
         this.emitChanges('preview:changed', item);
     } 
     
-    addToBasket(item: ICard) {
-		if (this.basket.indexOf(item) < 0) {
-			this.basket.push(item);
-			this.updateBasket();
-		} 
-    }
-
-    removeFromBasket(item: ICard) {
-		this.basket = this.basket.filter((it) => it != item);
-		this.updateBasket();
-    }
-
-    updateBasket() {
-		this.emitChanges('counter:changed', this.basket);
-		this.emitChanges('basket:changed', this.basket);
-    }
-
-    clearBasket() {
-		this.basket = [];
-		this.updateBasket();
-	}
-
-    setDeliveryField(field: keyof IOrderForm, value: string) {
-		this.order[field] = value;
-		if (this.validateDelivery()) {
-			this.events.emit('delivery:ready', this.order);
-		}    
-	}
-
-    setContactField(field: keyof IContactsForm, value: string) {
-		this.order[field] = value;
-		if (this.validateContact()) {
-			this.events.emit('contact:ready', this.order);
-		}
-	}
-
-    validateDelivery() {
-		const errors: typeof this.formErrors = {};
-		const deliveryRegex = /^[а-яА-ЯёЁa-zA-Z0-9\s\/.,-]$/;
-		if (!this.order.address) {
-			errors.address = 'Необходимо указать адрес';
-		} else if (!deliveryRegex.test(this.order.address)) {
-			errors.address = 'Адрес должен содержать только буквы, цифры, пробелы, точки, запятые и "/"';
-		}
-		this.formErrors = errors;
-		this.events.emit('formErrors:change', this.formErrors);
-		return Object.keys(errors).length === 0;
-	}
-
-    validateContact() {
-		const errors: typeof this.formErrors = {};
-		const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-		const phoneRegex = /^\+7[0-9]{10}$/;
-		if (!this.order.email) {
-			errors.email = 'Необходимо указать email';
-		} else if (!emailRegex.test(this.order.email)) {
-			errors.email = 'Некорректный адрес электронной почты';
-		}
-		let phoneValue = this.order.phone;
-		if (phoneValue.startsWith('8')) {
-			phoneValue = '+7' + phoneValue.slice(1);
-		}
-		if (!phoneValue) {
-			errors.phone = 'Необходимо указать телефон';
-		} else if (!phoneRegex.test(phoneValue)) {
-			errors.phone =
-				'Некорректный формат номера телефона, номер следует указывать в формате +7ХХХХХХХХХХ';
-		} else {
-			this.order.phone = phoneValue;
-		}
-		this.formErrors = errors;
-		this.events.emit('formErrors:change', this.formErrors);
-		return Object.keys(errors).length === 0;
-	}
 }
+
+ class CardItem extends Model<ICardItem> {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    image: string;
+    price: number | null;
+}
+
+export {AppState, CardItem}

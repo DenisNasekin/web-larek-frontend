@@ -1,20 +1,46 @@
+interface IAppState {
+    cardList: ICardItem[];
+    basket: string[];
+    preview: string | null;
+    order: IOrder | null;
+	total: string | number;
+	loading: boolean;
+}
+
 interface IPage {
     counterBasket: number;
     cardList: HTMLElement[];
     block: boolean;
 }
-
+//Интерфейс данных карточки с сервета
+interface ICardItem {
+	id: string;
+	title: string;
+	description: string;
+	category: string;
+	image: string;
+	price: number | null;
+  }
+//Интерфейс карточки товара на главной страницы
 interface ICard {
-	id?: string;
+	category: string;
+	title: string;
 	description: string;
 	image: string;
-	title: string;
-	category: string;
-	price: number | null;
-	button?: HTMLButtonElement;
-	buttonTitle: string;
+	price: number;
 }
-
+//Интерфейс карточки товара в превью
+interface ICardPreview {
+	text: string;
+}  
+//Интерфейс карточки в корзине
+interface ICardBasket {
+	index: number;
+	title: string;
+	price: number;
+	
+}  
+//Интерфейс события
 interface IActions {
     onClick: (event: MouseEvent) => void;
 }
@@ -22,10 +48,6 @@ interface IActions {
 interface IBasket {
 	items: HTMLElement[];
 	total: number;
-}
-
-interface IBasketCardList extends ICard{
-	index: number;
 }
 
 interface IFormValid {
@@ -64,15 +86,10 @@ type ApiListResponse<Type> = {
 	items: Type[];
 }
 
-interface IAppState {
-    cardList: ICard[];
-    basket: ICard[];
-    preview: string | null;
-    order: IOrder | null;
-}
+
 
 interface IModalData {
 	content: HTMLElement;
 }
 
-export {IPage, ICard, IActions, ApiListResponse, IOrder, ISuccessfulForm, IAppState, FormErrors, IOrderForm, IContactsForm, IBasket, IFormValid, ISuccessActions, IModalData}
+export {IPage, ICardItem, ICard, ICardPreview, ICardBasket, IActions, ApiListResponse, IOrder, ISuccessfulForm, IAppState, FormErrors, IOrderForm, IContactsForm, IBasket, IFormValid, ISuccessActions, IModalData}

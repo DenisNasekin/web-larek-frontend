@@ -1,38 +1,27 @@
 import {Form} from './form';
-import {IActions, IOrderForm} from '../types';
-import {ensureElement} from '../utils/utils';
+import {IOrderForm, IActions} from '../types';
+import {ensureAllElements} from '../utils/utils';
 import {IEvents} from './base/events';
 
 export class Order extends Form<IOrderForm> {
-	protected _onlineCard: HTMLButtonElement;
-	protected _oflineCash: HTMLButtonElement;
+	protected _buttons: HTMLButtonElement[];
 
-	constructor(container: HTMLFormElement, events: IEvents, actions?: IActions) {
+	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
-
-		this._onlineCard = ensureElement<HTMLButtonElement>(
-			'button[name="card"]',
-			this.container
-		);
-		this._oflineCash = ensureElement<HTMLButtonElement>(
-			'button[name="cash"]',
-			this.container
-		);
-		this._oflineCash.classList.add('button_alt-active');
-
-		if (actions?.onClick) {
-			this._onlineCard.addEventListener('click', actions.onClick);
-			this._oflineCash.addEventListener('click', actions.onClick);
-		}
+		this._buttons = ensureAllElements<HTMLButtonElement>('.button_alt', container);
+		this._buttons.forEach(button => {
+			button.addEventListener('click', () => {
+			  this.payment = button.name; 
+			  events.emit('payment:change', button)
+			});
+		})
 	}
-
-	toggleButtons(name: HTMLElement) {
-		this._onlineCard.classList.toggle('button_alt-active');
-		this._oflineCash.classList.toggle('button_alt-active');
-	}
-
+	set payment(name: string) {
+		this._buttons.forEach(button => {
+		  this.toggleClass(button, 'button_alt-active', button.name === name);
+		});
+	  }
 	set address(value: string) {
-		(this.container.elements.namedItem('address') as HTMLInputElement).value =
-			value;
-	}
+		(this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+	}	
 }

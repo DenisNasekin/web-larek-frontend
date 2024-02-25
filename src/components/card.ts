@@ -7,6 +7,13 @@ class Card<T> extends Component<ICard> {
     protected _title: HTMLElement;
     protected _image: HTMLImageElement;
     protected _price: HTMLElement;
+    protected _colors = <Record<string, string>> {
+        "софт-скил": "soft",
+        "другое": "other",
+        "дополнительное": "additional",
+        "кнопка": "button",
+        "хард-скил": "hard"
+      }
     
     constructor(container: HTMLElement, actions?: IActions) {
         super(container);
@@ -17,7 +24,8 @@ class Card<T> extends Component<ICard> {
     if (actions?.onClick) container.addEventListener('click', actions.onClick);
     }
     
-    set category(value: string) {this.setText(this._category, value);}
+    set category(value: string) {this.setText(this._category, value);
+        this._category.className = `card__category card__category_${this._colors[value]}`}
 
     set title(value: string) {this.setText(this._title, value);}
 

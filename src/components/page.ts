@@ -17,7 +17,7 @@ export class Page extends Component<IPage> {
     this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
     this._basket = ensureElement<HTMLElement>('.header__basket');
 
-    this._basket.addEventListener('clik', () => {
+    this._basket.addEventListener('click', () => {
         this.events.emit('basket:open');
     });
   }
@@ -29,7 +29,7 @@ export class Page extends Component<IPage> {
   set catalog(items: HTMLElement[]) {
     this._cardList.replaceChildren(...items);
   }
-
+  //матод блокировки прокрутки страницы при открытом модальном окне
   set locked(value: boolean) {
     if (value) {
         this._wrapper.classList.add('page__wrapper_locked');

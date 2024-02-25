@@ -26,7 +26,7 @@ export class Form<T> extends Component<IFormValid>{
 		});
 	}
 
-    InInputChange(field: keyof T, value: string) {
+    protected InInputChange(field: keyof T, value: string) {
 		this.events.emit(`${this.container.name}.${String(field)}:change`, {
 			field,
 			value,

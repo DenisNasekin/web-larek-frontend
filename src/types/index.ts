@@ -8,11 +8,12 @@ interface IAppState {
 }
 
 interface IPage {
-    counterBasket: number;
     cardList: HTMLElement[];
-    block: boolean;
 }
-//Интерфейс данных карточки с сервета
+
+/*--Интерфейсы карточки--*/
+
+//Интерфейс данных карточки с сервера
 interface ICardItem {
 	id: string;
 	title: string;
@@ -20,7 +21,7 @@ interface ICardItem {
 	category: string;
 	image: string;
 	price: number | null;
-  }
+}
 //Интерфейс карточки товара на главной страницы
 interface ICard {
 	category: string;
@@ -45,38 +46,46 @@ interface IActions {
     onClick: (event: MouseEvent) => void;
 }
 
+/*--Интерфейсы карточки--*/
+
+//Интерфейс корзины
 interface IBasket {
 	items: HTMLElement[];
 	total: number;
 }
 
+
+/*--Интерфейсы заказа--*/
+
+//Интерфейс валидации формы
 interface IFormValid {
 	valid: boolean;
 	errors: string[];
 }
-
+//Тип ошибки формы
 type FormErrors = Partial<Record<keyof IOrder, string>>;
-
+//Интерффейс формы заказа
 interface IOrderForm {
-	payment: string;
-	address: string;
+	payment?: string;
+	address?: string;
+	phone?: string;
+	email?: string;
+	total?: string | number;
 }
-
-interface IOrder extends IOrderForm, IContactsForm {
-    total: number;
+//Интерфейс заказа
+interface IOrder extends IOrderForm {
     items: string[];
 }
-
-interface IContactsForm {
-	email: string;
-    phone: string;
-}
-
+//Интерфейс успешного заказа
 interface ISuccessfulForm {
-	total: number;
+    [x: string]: any;
     id: string;
 }
-
+//Интерфейс формы успешного заказа
+interface ISuccess {
+	total: number;
+  }
+//Интерфейс события
 interface ISuccessActions {
 	onClick: () => void;
 }
@@ -92,4 +101,5 @@ interface IModalData {
 	content: HTMLElement;
 }
 
-export {IPage, ICardItem, ICard, ICardPreview, ICardBasket, IActions, ApiListResponse, IOrder, ISuccessfulForm, IAppState, FormErrors, IOrderForm, IContactsForm, IBasket, IFormValid, ISuccessActions, IModalData}
+export {IPage, ICardItem, ICard, ICardPreview, ICardBasket, IActions, ApiListResponse, IOrder, 
+	ISuccessfulForm, IAppState, FormErrors, IOrderForm, IBasket, IFormValid, ISuccessActions, IModalData, ISuccess}

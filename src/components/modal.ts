@@ -18,24 +18,24 @@ export class Modal extends Component<IModalData> {
 		this._content.addEventListener('click', (event) => event.stopPropagation());
 	}
 
-	content(value: HTMLElement) {
-		this._content.replaceChildren(value);
-	}
+	set content(value: HTMLElement) {
+        this._content.replaceChildren(value);
+    }
 
-	open() {
-		this.container.classList.add('modal_active');
-		this.events.emit('modal:open');
-	}
+    open() {
+        this.container.classList.add('modal_active');
+        this.events.emit('modal:open');
+    }
 
-	close() {
-		this.container.classList.remove('modal_active');
-		this.content = null;
-		this.events.emit('modal:close');
-	}
+    close() {
+        this.container.classList.remove('modal_active');
+        this.content = null;
+        this.events.emit('modal:close');
+    }
 
-	render(data: IModalData): HTMLElement {
-		super.render(data);
-		this.open();
-		return this.container;
-	}
+    render(data: IModalData): HTMLElement {
+        super.render(data);
+        this.open();
+        return this.container;
+    }
 }

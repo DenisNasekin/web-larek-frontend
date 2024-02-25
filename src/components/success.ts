@@ -1,8 +1,8 @@
-import {ISuccessfulForm, ISuccessActions } from '../types';
+import {ISuccessActions, ISuccess} from '../types';
 import {ensureElement} from '../utils/utils';
 import {Component} from './base/component';
 
-export class Success extends Component<ISuccessfulForm> {
+export class Success extends Component<ISuccess> {
 	protected _close: HTMLElement;
 	protected _total: HTMLElement;
 

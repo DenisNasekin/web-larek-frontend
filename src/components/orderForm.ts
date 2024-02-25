@@ -1,5 +1,5 @@
 import {Form} from './form';
-import {IOrderForm, IActions} from '../types';
+import {IOrderForm} from '../types';
 import {ensureAllElements} from '../utils/utils';
 import {IEvents} from './base/events';
 

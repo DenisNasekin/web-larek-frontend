@@ -8,6 +8,7 @@ export class WebLarekApi extends Api {
         super(baseUrl, options);
         this.cdn = cdn;
     }
+    
     //получение списка карточек
     getCardList(): Promise<ICard[]> {
         return this.get('/product').then((data: ApiListResponse<ICard>) =>
@@ -17,6 +18,7 @@ export class WebLarekApi extends Api {
 			}))
 		);
     }
+
     //получение данных по id
     getCardItem(id: string): Promise<ICard> {
         return this.get(`/product/${id}`).then((item: ICard) => ({
@@ -24,6 +26,7 @@ export class WebLarekApi extends Api {
 			image: this.cdn + item.image,
 		}));
     }
+
     //возврат данных по заказу
     orderCard(order: IOrder): Promise<ISuccessfulForm> {
         return this.post(`/order`, order).then((data: ISuccessfulForm) => data);

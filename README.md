@@ -1,13 +1,19 @@
 # Проектная работа "Веб-ларек"
 
-Используемый стек: HTML, SCSS, TS, Webpack
+## Используемый стек:
 
-Структура проекта:
+- HTML; 
+- SCSS; 
+- TS; 
+- Webpack;
+
+## Структура проекта:
+
 - src/ — исходные файлы проекта
 - src/components/ — папка с JS компонентами
 - src/components/base/ — папка с базовым кодом
 
-Важные файлы:
+## Важные файлы:
 - src/pages/index.html — HTML-файл главной страницы
 - src/types/index.ts — файл с типами
 - src/index.ts — точка входа приложения
@@ -16,78 +22,39 @@
 - src/utils/utils.ts — файл с утилитами
 
 ## Установка и запуск
-Для установки и запуска проекта необходимо выполнить команды
 
-```
-npm install
-npm run start
-```
+Для установки и запуска проекта необходимо выполнить команды:
 
-или
+- npm install;
+- npm run start;
+- yarn;
+- yarn start;
 
-```
-yarn
-yarn start
-```
 ## Сборка
 
-```
-npm run build
-```
+- npm run build;
+- yarn build;
 
-или
+## Реализация 
 
-```
-yarn build
-```
-
-Реализация данного приложение была разработана по архитектуре MVP, состоящей из компонентов:
+Данное приложение было реализовано с помощью архитектуры MVP:
 
 - **Model** - модель данных;
 - **View** - модель отображения интерфейса;
 - **Presenter** - связующая модель;
 
-## Базовые типы, интерфейсы и классы
+## Базовый код
 
-**Типы**
----
-- ``ApiListResponse<Type>`` - ответ списка Апи
-- ``ApiPostMethods`` - пост методы Апи
-- ``EventName`` - имя события
-- ``Subscriber`` - подписчик
-- ``EmitterEvent`` - событие выбора. Принимает EventName и данные 
+1. Класс **EventEmitter** - брокер событий. Данный класс выполняет роль Presenterа в системе MVP.
 
-**Интерфейсы**
----
-- ``IEvents`` - содержит методы on, emit, trigger
-
-- ``IAppState `` - интерфейс данных приложения
-
-```
-interface IAppState {
-    cardList: IProduct[];
-    basket: IProduct[];
-    preview: string | null;
-    order: IOrder | null;
-}   
-```
-
-**Классы**
----
-1. Класс **Api** - класс по работе с Апи. Это абстрактный класс (не имеющий экземпляров), его наследником является класс **WebLarekApi**.
-
-   **Поля:**
-
-   - ``baseUrl:string (только для чтения)``
-   - ``options:RequestInit (зашищенный)``
-
-   **Методы:**
-
-   - ``handleResponse(response: Response): Promise<object>`` (зашищенный) - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
-   - ``get(uri: string)`` - примает путь и возвращает ответ сервера.
-   - ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - примает путь и данные, возвращает ответ сервера.
-
-2. Класс **EventEmitter** - брокер событий, имплементируется от IEvents. Данный класс выполняет роль Presenterа в системе MVP. Имеет следующие поля и методы
+   ```
+   interface IEvents {
+      on<T extends object>(event: EventName, callback: (data: T) => void): void;
+      emit<T extends object>(event: string, data?: T): void;
+      trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
+   }
+   ```
+   Имеет следующие поля и методы:
 
    **Поля:**
 
@@ -102,48 +69,23 @@ interface IAppState {
    - ``offAll()`` - сбрасывает все обработчики.
    - ``trigger<T extends object>(eventName: string, context?: Partial<T>)`` - принимает событие, возвращает функцию триггера генерирующий событие при вызове.
 
-3. Класс **Component** - абстрактный класс, нужен для работы с DOM элементами. От этого класса наследуют все классы отображения(View): **Page**, **Card**, **Form**, **Basket**,  **SuccessfulForm**, **Modal**. Имеет следующие поля и методы
 
-   **Методы:**
+2. Класс **Api** - класс по работе с Апи. Это абстрактный класс (не имеющий экземпляров), его наследником является класс **WebLarekApi**.
 
-   - ``toggleClass(element: HTMLElement, className: string, force?: boolean)`` - переключает классы.
-   - ``setText(element: HTMLElement, value: unknown)`` -  устанавливает текстовое поле.
-   - ``setDisabled(element: HTMLElement, state: boolean)`` - меняет статус блокировки.
-   - ``setHidden(element: HTMLElement)`` - скрывает элемент.
-   - ``setVisible(element: HTMLElement)`` - показывает элемент.
-   - ``setImage(element: HTMLImageElement, src: string, alt?: string)`` - устанавливает изображение с альтернативным текстом.
-   - ``render(data?: Partial): HTMLElement`` - возвращает корневой DOM элемент.
-
-4. Класс **Model** - абстрактный класс модели данных, его наследником является класс **AppState**.
-
-   **Методы:**
-
-   - ``emitChanges(event: string, payload?: object)`` - сообщает, что модель изменилась.
-
-5. Класс **AppState** - класс управления состоянием проекта (списка карточек, корзины, заказов и форм). Наследуется от класса Model
+   Имеет следующие поля и методы:
 
    **Поля:**
 
-   - ``_cardList(зашищенный)`` - Card[];
-   - ``_basket(зашищенный)``- Card[];
-   - ``_order(зашищенный)``- IOrder;
-   - ``_preview(зашищенный)``- string | null;
-   - ``_formErrors(зашищенный)``- FormErrors;
+   - ``baseUrl:string)``
+   - ``options:RequestInit``
 
    **Методы:**
 
-   - ``setCatalog`` - устанавливает список карточек.
-   - ``setPreview`` - устанавливает предпросомотр карточек.
-   - ``addToBasket`` - добавляет товар в корзину.
-   - ``removeFromBasket`` - удаляет товар из корзины.
-   - ``updateBasket`` - обновляет состояние корзины.
-   - ``clearBasket`` - очищает корзину.
-   - ``setDeliveryField`` - устанавливает значения данные доставки.
-   - ``setContactField`` - устанавливает значения данные контактов.
-   - ``validateDelivery `` - валидация формы доставки.
-   - ``validateContact`` - валидация формы контактов.
+   - ``handleResponse(response: Response): Promise<object>`` - обработчик ответа сервера. Принимает ответ и возвращает его, если ответа нет возвращает ошибку.
+   - ``get(uri: string)`` - примает путь и возвращает ответ сервера.
+   - ``post(uri: string, data: object, method: ApiPostMethods = 'POST')`` - принимает путь и данные, возвращает ответ сервера.
 
-6. Класс **WebLarekApi** - класс отправляет информацию на сервер и возвращает ответ сервера. Наследуется от класса Api и имеет следующие поля и методы. 
+   Класс **WebLarekApi** - класс отправляет информацию на сервер и возвращает ответ сервера. Наследуется от класса Api и имеет следующие поля и методы. 
 
    **Поля:**
 
@@ -157,154 +99,151 @@ interface IAppState {
 
    - ``getCardList(): Promise<ICard[]>`` - получение списка всех карточек с сервера
    - ``getCardItem(id: string): Promise<ICard>`` - получение данных карточки по id
-   - ``orderCard(order: IOrder): Promise<IOrderResult>`` - Получение списка всех карточек с сервера
+   - ``orderCard(order: IOrder): Promise<IOrderResult>`` - возврат данных по заказу
 
-## View компоненты и данные
 
-**Типы**
----
-- ``PaymentMethod`` - тип выбора способа оплаты
-- ``FormErrors = Partial<Record<keyof IOrder, string>>`` - тип ошибки формы
 
-**Интерфейсы**
----
-- ``IPage`` - интерфейс главной страницы
+3. Класс **Component<T>** - абстрактный класс, нужен для работы с DOM элементами. 
+   
+   От этого класса наследуют все классы отображения(View): 
 
-```
-interface IPage {
-    counterBasket: number;
-    cardList: HTMLElement[];
-    block: boolean;
-}
-```
-- ``ICard`` - интерфейс карточки товара. Данные получаем с сервера
+   - **Page**; 
+   - **Card**; 
+   - **Basket**;
+   - **Modal**;
+   - **Form**;
+   - **SuccessfulForm**;
 
-```
-interface ICard {
-	id?: string;
-	description: string;
-	image: string;
-	title: string;
-	category: string;
-	price: number | null;
-	button?: HTMLButtonElement;
-}
-```
-- ``IBasket `` - интерфейс корзины
+   Имеет следующие методы:
 
-```
-interface IBasket {
-	item: HTMLElement[];
-	total: number;
-}
-```
-- ``IBasketCardList `` - интерфейс корзины со списком покупок, расширяется  от IBasket
+   **Методы:**
 
-```
-interface IBasketCardList extends ICard{
-	index: number;
-}
-```
-- ``IFormValid `` - интерфейс валидации формы
+   - ``toggleClass(element: HTMLElement, className: string, force?: boolean)`` - переключает классы.
+   - ``setText(element: HTMLElement, value: unknown)`` -  устанавливает текстовое поле.
+   - ``setDisabled(element: HTMLElement, state: boolean)`` - меняет статус блокировки.
+   - ``setHidden(element: HTMLElement)`` - скрывает элемент.
+   - ``setVisible(element: HTMLElement)`` - показывает элемент.
+   - ``setImage(element: HTMLImageElement, src: string, alt?: string)`` - устанавливает изображение с альтернативным текстом.
+   - ``render(data?: Partial): HTMLElement`` - возвращает корневой DOM элемент.
 
-```
-interface IFormValid {
-	valid: boolean;
-	errors: string[];
-}
-```
-- ``IOrderForm `` - интерфейс модального окна с вводом адреса
+4. Класс **Model** - абстрактный класс модели данных, его наследником является класс **AppState** и **CardItem**.
 
-```
-interface IOrderForm  {
-	payment: string;
-	address: string;
-}
-```
-- ``IContactsForm `` - интерфейс модального окна с вводом почты и телефона
+   **Методы:**
 
-```
-interface IContactsForm {
-	email: string;
-   phone: string;
-}
-```
-- ``ISuccessfulForm `` - интерфейс модального окна с завершением заказа
+   - ``emitChanges(event: string, payload?: object)`` - сообщает, что модель изменилась.
 
-```
-interface ISuccessfulForm {
-	total: number;
-   id: string;
-}
-```
+   Класс **AppState** - класс управления состоянием проекта (списка карточек, корзины, заказов и форм). Наследуется от класса Model
 
-- ``IOrder`` - интерфейс всех данных в заказе
-
-```
-interface IOrder extends IOrderForm, IContactsForm {
-    total: number;
-    items: string[];
-}
-```
-
-- ``IModalData`` - интерфейс данных в модальном окне
-
-```
-interface IModalData {
-    content: HTMLElement;
-}    
-```
-
-- ``IActions  `` - передоваемые действия
-
-```
-interface IActions {
-    onClick: (event: MouseEvent) => void;
-} 
-```
-
-- ``ISuccessActions  `` - передоваемые действия успешного заказа
-
-```
-interface ISuccessActions {
-    onClick: () => void;
-}
-``` 
-
-**Классы** описание классов View, наследующих от класса **Component**
----
-1. Класс **Page** - формирование главной страницы. Наследуется от класса  Component
+   ```
+   interface IAppState {
+      cardList: ICardItem[];
+      basket: string[];
+      preview: string | null;
+      order: IOrder | null;
+	   total: string | number;
+	   loading: boolean;
+   }
+   ```
+   Имеет следующие методы:
 
    **Поля:**
 
-   - ``_counterBasket: (зашищенный)`` - HTMLElement;
-   - ``_cardList (зашищенный)``- HTMLElement;
-   - ``_wrapper (зашищенный)``- HTMLImageElement;
-   - ``_basket (зашищенный)``- HTMLElement;
+   - ``_cardList`` - CardItem[];
+   - ``_basket``- CardItem[];
+   - ``_order``- IOrder;
+   - ``_preview``- string | null;
+   - ``_formErrors``- FormErrors;
+
+   **Методы:**
+
+   - ``setCatalog`` - устанавливает список карточек.
+   - ``setPreview`` - устанавливает предпросомотр карточек.
+   - ``addCardToBasket`` - добавляет товар в заказ.
+   - ``setCardToBasket`` - добавляет товар в корзину.
+   - ``basketList`` - вернуть список товара в корзине.
+   - ``statusBasket`` - вернуть информацию по составу в корзине.
+   - ``total`` - вывести сумму заказа.
+   - ``getTotal`` - вернуть общую сумму заказов.
+   - ``deleteCardToBasket`` - удалить товар из корзины.
+   - ``deleteCardFromOrder `` - удалить товар из заказа.
+   - ``setOrderField`` - Вывести данные введенные в поле доставки.
+   - ``setContactsField`` - Вывести данные введенные в поле контакты.
+   - ``validateOrder`` - Валидация введенных данных.
+   - ``validateContacts`` - Валидация введенных формы котактов.
+   - ``clearOrder`` - отчистка заказа.
+
+   Класс **CardItem** - класс хранения данных на сервере
+
+   ```
+   interface ICardItem {
+	   id: string;
+	   title: string;
+	   description: string;
+	   category: string;
+	   image: string;
+	   price: number | null;
+   }
+   ```
+   Имеет следующие методы:
+
+   **Поля:**
+
+   - ``id`` - string;
+   - ``title`` - string;
+   - ``description`` -  string;
+   - ``category`` -  string;
+   - ``image`` -  string;
+   - ``price`` - number | null;
+
+## Компоненты
+
+1. Класс **Page** - формирование главной страницы. Наследуется от класса  Component
+
+   ```
+   interface IPage {
+      cardList: HTMLElement[];
+   }
+   ```
+   Имеет следующие поля и методы:
+
+   **Поля:**
+
+   - ``_counterBasket`` - HTMLElement;
+   - ``_cardList``- HTMLElement;
+   - ``_wrapper``- HTMLImageElement;
+   - ``_basket``- HTMLElement;
    
    **Конструктор:**
 
    constructor(container: HTMLElement, events: IEvents)
 
-
    **Методы:**
 
    - ``set counter(value: number | null)`` - изменить счетчик товара в корзине на главной странице.
-   - ``set cardList(items: HTMLElement[])`` - вывести список карточек.
+   - ``set catalog(items: HTMLElement[])`` - вывести список карточек.
    - ``set locked(value: boolean)`` - установка или снятие блока прокрутки страницы.
 
-2. Класс **Card** - описание карточки товара. Наследуется от класса Component
+2. Класс **Card** - описание карточки товара. Наследуется от класса Component. Имеет двух наследников CardPreview и CardBasket
+
+   ```
+   interface ICard {
+	   category: string;
+	   title: string;
+	   description: string;
+	   image: string;
+	   price: number;
+   }
+   ```
+
+   Имеет следующие поля и методы:
 
    **Поля:**
 
-   - ``_index (зашищенный)`` - HTMLElement;
-   - ``_category (зашищенный)`` - HTMLElement;
-   - ``_title (зашищенный)``- HTMLElement;
-   - ``_image (зашищенный)``- HTMLImageElement;
-   - ``_description (зашищенный)``- HTMLElement;
-   - ``_price (зашищенный)``- HTMLElement;
-   - ``_button (зашищенный)``- HTMLButtonElement;
-   - ``_buttonTitle (зашищенный)``- HTMLButtonElement;
+   - ``_category`` - HTMLElement;
+   - ``_title``- HTMLElement;
+   - ``_image``- HTMLImageElement;
+   - ``_price``- HTMLElement;
+   - ``_colors``- <Record<string, string>>;
 
     **Конструктор:**
 
@@ -312,23 +251,79 @@ interface ISuccessActions {
 
    **Методы:**
 
-   - ``set id(value: string)`` - принимает строку с сервера, устанавливает id.
-   - ``set title(value: string)`` - принимает строку с сервера, устанавливает заголовок.
    - ``set category(value: string)`` - принимает строку с сервера, устанавливает категорию.
-   - ``set description(value: string)`` - принимает строку с сервера, устанавливает описание.
+   - ``set title(value: string)`` - принимает строку с сервера, устанавливает заголовок.
    - ``set image(value: string)`` - принимает строку с сервера, устанавливает изображение.
-   - ``get id(): string `` - получить id.
-   - ``get title(): string`` - получить название.
-   - ``get price(): number`` - получить цену.
-   - ``disablePriceButton`` - делает кнопку не активной, если нет цены.
-   - ``set buttonTitle`` - устанавливает textContent кнопки.   
+   - ``set price(value: number)`` - принимает номер с сервера, устанавливает цену.
+
+   Класс  **CardPreview** - описание карточки товара в превью  . Наследуется от класса Card.
+
+   ```
+   interface ICardPreview {
+	   text: string;
+   }  
+   ```
+
+   Имеет следующие поля и методы:
+
+   **Поля:**
+
+   - ``_text`` - HTMLElement;
+   - ``_button``- HTMLElement;
+
+   **Конструктор:**
+
+   constructor(container: HTMLElement, actions?: IActions)
+
+   **Методы:**
+
+   - ``set text(value: string)`` - принимает строку с сервера, устанавливает текст.
+
+   Класс  **CardBasket** - описание карточки товара в превью  . Наследуется от класса Card.
+
+   ```
+   interface ICardBasket {
+	   index: number;
+	   title: string;
+	   price: number;
+   }   
+   ```
+
+   Имеет следующие поля и методы:
+
+   **Поля:**
+
+   - ``_index`` - HTMLElement;
+   - ``_title`` - HTMLElement;
+   - ``_price`` - HTMLElement;
+   - ``_button`` - HTMLElement;
+
+   **Конструктор:**
+
+   constructor(container: HTMLElement, actions?: IActions)
+
+   **Методы:**
+
+   - ``set index(value: number)`` - принимает номер, устанавливает индекс.
+   - ``set title(value: string)`` - принимает строку, устанавливает текст.
+   - ``set price(value: number | null)`` - принимает номер, устанавливает цену.
+
 
 3. Класс **Basket** - описание корзины. Наследует класс Component
+
+   ```
+   interface IBasket {
+	   items: HTMLElement[];
+	   total: number;
+   }
+   ```
+
+   Имеет следующие поля и методы:
 
    **Поля:**
 
    - ``_list`` - HTMLElement;
-   - ``_button``- HTMLButtonElement;;
+   - ``button``- HTMLButtonElement;;
    - ``_total``- HTMLElement;
 
    **Конструктор:**
@@ -339,9 +334,18 @@ interface ISuccessActions {
 
    - ``set items(items: HTMLElement[])`` - вставить данные в корзину.
    - ``set total(price: number)`` - посчитать общую стоимость товара.
-   - ``set selected(items: Card[])`` - проверить наличие карточки в корзине.
 
-4. Класс **Form<T>** - класс для работы с формами. Наследуется от класса Component
+
+4. Класс **Form<T>** - класс для работы с формами. Наследуется от класса Component. Имеет двух наследников Order и Contacts
+
+   ```
+   interface IFormValid {
+	   valid: boolean;
+	   errors: string[];
+   }
+   ```
+
+   Имеет следующие поля и методы:
 
    **Поля:**
 
@@ -350,7 +354,7 @@ interface ISuccessActions {
 
    **Конструктор:**
 
-   constructor(container: HTMLFormElement, events: IEvents)
+   constructor(protected container: HTMLFormElement, protected events: IEvents)
 
    **Методы:**
 
@@ -359,24 +363,44 @@ interface ISuccessActions {
    - ``set errors`` - устанавливает и отображает ошибки валидации формы.
    - ``render`` - показывает состояние формы.
 
-5. Класс **OrderForm** - отображение модального окна заполнения адреса. Наследует класс Form
+    Класс **Order** - отображение модального окна заполнения адреса. Наследуется от класса Form
+
+   ```
+   interface IOrderForm {
+	   payment?: string;
+	   address?: string;
+	   phone?: string;
+	   email?: string;
+	   total?: string | number;
+   }
+   ```
+
+   Имеет следующие поля и методы:
 
    **Поля:**
 
-   - ``_onlineCard`` - HTMLButtonElement;
-   - ``_oflineCash``- HTMLButtonElement;;
-   - ``_total``- HTMLElement;
+   - ``_buttons`` - HTMLButtonElement;
 
    **Конструктор:**
 
-   constructor(container: HTMLFormElement, events: IEvents, actions?: IActions)
+   constructor(container: HTMLFormElement, events: IEvents)
 
    **Методы:**
 
-   - ``toggleButtons`` - переключение между кнопками.
+   - ``set payment(name: string)`` - переключение между кнопками.
    - ``set address`` - ввод адреса доставки.
      
-6. Класс **ContactsForm** - отображение модального окна заполнения почты и телефона. Наследует класс Form
+   Класс **Contacts** - отображение модального окна заполнения почты и телефона. Наследуется от  класса Form
+
+   ```
+   interface IOrderForm {
+	   payment?: string;
+	   address?: string;
+	   phone?: string;
+	   email?: string;
+	   total?: string | number;
+   }   
+   ```
 
    **Конструктор:**
 
@@ -387,11 +411,24 @@ interface ISuccessActions {
    - ``set phone`` - ввод телефона.
    - ``set email`` - ввод почты.
 
-7. Класс **SuccessfulForm** - отображение модального удачного заказа. Наследуется от  класс Component
+7. Класс **Success** - отображение модального удачного заказа. Наследуется от  класс Component
+
+   ```
+   interface ISuccess {
+	   total: number;
+   }
+   ```
+
+    ```
+   interface ISuccessActions {
+	   onClick: () => void;
+   }
+   ```
+   Имеет следующие поля и методы:
 
    **Поля:**
 
-   - ``close`` -  HTMLElement;
+   - ``_close`` -  HTMLElement;
    - ``_total``- HTMLElement;
 
    **Конструктор:**
@@ -404,13 +441,26 @@ interface ISuccessActions {
 
 8. Класс **Modal** - класс для работы с модальным окном. Наследуется от класса Component
 
+   ```
+   interface IModalData {
+	   content: HTMLElement;
+   }
+   ```
+
+   Имеет следующие поля и методы:
+   
+   **Поля:**
+
+   - ``_closeButton`` -  HTMLButtonElement;
+   - ``_content``- HTMLElement;
+
    **Конструктор:**
 
    constructor(container: HTMLElement, events: IEvents)
 
    **Методы:**
 
-   - ``content`` - определяет контент показа в модальном окне.
+   - ``set content`` - определяет контент показа в модальном окне.
    - ``open`` - открывает модальное окно.
    - ``close`` - закрывает модальное окно.
    - ``render`` - рендерит модальное окно.
@@ -420,10 +470,9 @@ interface ISuccessActions {
 **Карточка**
 ---
 - ``items:changed`` - изменение продуктов в каталоге
-- ``card:toggle`` - переключение продукта в коризне
 - ``card:select`` - выбор карточки;
 - ``card:add`` - добавление карточки в корзину;
-- ``card:delete`` - удаление карточки из корзины;
+- ``card:remove`` - удаление карточки из корзины;
 - ``preview:changed`` - открытие окна карточки;
 
 **Корзина**
@@ -437,8 +486,6 @@ interface ISuccessActions {
 - ``order:open`` - открытие модального окна адреса доставки;
 - ``payment:toggle`` - изменение способа оплаты;
 - ``/^order\..*:change/`` - изменение поля формы доставки;
-- ``delivery:ready`` - готовность формы доставки;
-- ``contact:ready`` - готовность формы контактов;
 - ``order:submit`` - отправка формы доставки;
 - ``contacts:submit`` - отправка формы контактов;
 - ``formErrors:change`` - списки ошибок;

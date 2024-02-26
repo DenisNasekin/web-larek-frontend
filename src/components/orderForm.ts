@@ -12,10 +12,12 @@ export class Order extends Form<IOrderForm> {
 		this._buttons.forEach(button => {
 			button.addEventListener('click', () => {
 			  this.payment = button.name; 
+
 			  events.emit('payment:change', button)
 			});
 		})
 	}
+	
 	set payment(name: string) {
 		this._buttons.forEach(button => {
 		  this.toggleClass(button, 'button_alt-active', button.name === name);
@@ -23,5 +25,5 @@ export class Order extends Form<IOrderForm> {
 	  }
 	set address(value: string) {
 		(this.container.elements.namedItem('address') as HTMLInputElement).value = value;
-	}	
+	}
 }

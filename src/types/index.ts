@@ -1,10 +1,9 @@
 interface IAppState {
     cardList: ICardItem[];
     basket: string[];
+	order: IOrder | null;
     preview: string | null;
-    order: IOrder | null;
-	total: string | number;
-	loading: boolean;
+	formErrors: FormErrors;
 }
 
 interface IPage {

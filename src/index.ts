@@ -3,7 +3,7 @@ import {API_URL, CDN_URL} from './utils/constants';//Импорт данных �
 import {EventEmitter} from './components/base/events';//Импорт слушателя
 import {WebLarekApi} from './components/WebLarekApi';//Импорт апи
 import {cloneTemplate, ensureElement } from './utils/utils';//Импорт утилит клонирования темплэйта и элемента обеспечения
-import {AppState, CardItem} from './components/AppState';//Импорт бизнес логики
+import {AppState} from './components/AppState';//Импорт бизнес логики
 import {Page} from './components/page';//Импорт главной страницы
 import {Card, CardPreview, CardBasket} from './components/card';//Импорт карточки
 import {Modal} from './components/modal';//Импорт модального окна
@@ -11,7 +11,7 @@ import {Basket} from './components/basket';//Импорт корзины
 import {Order} from './components/orderForm';//Импорт формы адреса
 import {Contacts} from './components/contantForm';//Импорт формы данных
 import {Success} from './components/success';//Импорт успешного заказа
-import {IOrderForm} from './types';//Импорт интерфейсов форм
+import {IOrderForm, ICardItem} from './types';//Импорт интерфейсов форм
 
 const events = new EventEmitter();//Создаем переменную управления событиями
 const api = new WebLarekApi(CDN_URL, API_URL);//Создаем переменную управления Апи
@@ -63,10 +63,10 @@ events.on('items:changed', () => {
 });
 
 //Получение данных и открытие превью карточки
-events.on('card:select', (item: CardItem) => {
+events.on('card:select', (item: ICardItem) => {
     appState.setPreview(item);
   });
-events.on('preview:changed', (item: CardItem) => {
+events.on('preview:changed', (item: ICardItem) => {
     const card = new CardPreview(cloneTemplate(cardPreviewTemplate), {
         onClick: () => events.emit('card:add', item)
         });
@@ -82,7 +82,7 @@ events.on('preview:changed', (item: CardItem) => {
 });
 
 //Добавление товара в заказ и корзину, обновление счетчика корзины на главной страницы
-events.on('card:add', (item: CardItem) => {
+events.on('card:add', (item: ICardItem) => {
     appState.addCardToBasket(item);
     appState.setCardToBasket(item);
     page.counter = appState.basketList.length;
@@ -110,9 +110,8 @@ events.on('basket:open', () => {
 })
 
 //Удаление товара из корзины
-events.on('card:remove', (item: CardItem) => {
+events.on('card:remove', (item: ICardItem) => {
     appState.deleteCardToBasket(item);
-    appState.deleteCardFromOrder(item);
     page.counter = appState.basketList.length;
     basket.setDisabled(basket.button, appState.statusBasket);
     basket.total = appState.getTotal();
@@ -153,6 +152,7 @@ events.on(/^order\..*:change/, (data: { field: keyof IOrderForm, value: string }
     appState.setOrderField(data.field, data.value);
   });
 
+
 //Валидация
 events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
     const { email, phone, address, payment } = errors;
@@ -184,20 +184,15 @@ events.on(/^contacts\..*:change/, (data: { field: keyof IOrderForm, value: strin
 events.on('contacts:submit', () => {
     api.orderCard(appState.order)
     .then((result) => {
-        console.log(appState.order)
-        const success = new Success(cloneTemplate(successTemplate), {
-            onClick: () => {
-                modal.close();
-                appState.clearBasket();
-                page.counter = appState.basketList.length;
-            }
+        appState.clearBasket();
+        page.counter = appState.basketList.length;
+        const success = new Success(cloneTemplate(successTemplate), {onClick: () => {modal.close();}
         });
-      
         modal.render({
-            content: success.render({
-            total: appState.getTotal()
-            })
+        content: success.render({
+        total: appState.getTotal()
         })
-      })
+        })
+    })
     .catch(err => {console.error(err);})
 });

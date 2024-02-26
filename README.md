@@ -126,7 +126,7 @@
    - ``setImage(element: HTMLImageElement, src: string, alt?: string)`` - устанавливает изображение с альтернативным текстом.
    - ``render(data?: Partial): HTMLElement`` - возвращает корневой DOM элемент.
 
-4. Класс **Model** - абстрактный класс модели данных, его наследником является класс **AppState** и **CardItem**.
+4. Класс **Model** - абстрактный класс модели данных, его наследником является класс **AppState**.
 
    **Методы:**
 
@@ -138,18 +138,17 @@
    interface IAppState {
       cardList: ICardItem[];
       basket: string[];
+	   order: IOrder | null;
       preview: string | null;
-      order: IOrder | null;
-	   total: string | number;
-	   loading: boolean;
+	   formErrors: FormErrors;
    }
    ```
    Имеет следующие методы:
 
    **Поля:**
 
-   - ``_cardList`` - CardItem[];
-   - ``_basket``- CardItem[];
+   - ``_cardList`` - ICardItem[];
+   - ``_basket``- ICardItem[];
    - ``_order``- IOrder;
    - ``_preview``- string | null;
    - ``_formErrors``- FormErrors;
@@ -165,14 +164,11 @@
    - ``total`` - вывести сумму заказа.
    - ``getTotal`` - вернуть общую сумму заказов.
    - ``deleteCardToBasket`` - удалить товар из корзины.
-   - ``deleteCardFromOrder `` - удалить товар из заказа.
    - ``setOrderField`` - Вывести данные введенные в поле доставки.
    - ``setContactsField`` - Вывести данные введенные в поле контакты.
    - ``validateOrder`` - Валидация введенных данных.
    - ``validateContacts`` - Валидация введенных формы котактов.
    - ``clearOrder`` - отчистка заказа.
-
-   Класс **CardItem** - класс хранения данных на сервере
 
    ```
    interface ICardItem {
@@ -184,16 +180,6 @@
 	   price: number | null;
    }
    ```
-   Имеет следующие методы:
-
-   **Поля:**
-
-   - ``id`` - string;
-   - ``title`` - string;
-   - ``description`` -  string;
-   - ``category`` -  string;
-   - ``image`` -  string;
-   - ``price`` - number | null;
 
 ## Компоненты
 
